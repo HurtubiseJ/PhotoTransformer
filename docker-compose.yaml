@@ -1,0 +1,27 @@
+
+
+services:
+  photo-transformer-app:
+    container_name: photo-transformer-app
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./data:/data"
+    depends_on:
+      - photo-transformer-redis
+    
+  photo-transformer-redis:
+    container_name: photo-transformer-redis
+    image: redis:7.4-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel debug
+    volumes:
+      - redis_data:/data
+volumes:
+  redis_data:
+    driver: local
